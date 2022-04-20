@@ -268,12 +268,15 @@ const pets = [
 
   divToFill.innerHTML = domString;
 
+  //button function below here
 
   let buttonUpdateString = ""
 
-  function showAnimal(animal) {
+  function showAnimal(event) {
+    console.log("event.target.id");
     buttonUpdateString = ""
-    if (animal === "all") {
+    if (event.target.id === "all-btn") {
+
       for (const particularPet of pets) {
         buttonUpdateString += `<div class="card text-center">
         <div class="card-header">
@@ -291,9 +294,21 @@ const pets = [
         </div>
       </div>`
       }
+
     } else {
       for (const particularPet of pets) {
-        if (particularPet.type === animal) {
+        let animalChosen = ""
+        if (event.target.id === "dog-btn") {
+          animalChosen = "dog"
+        }
+        if (event.target.id === "cat-btn") {
+          animalChosen = "cat"
+        }
+        if (event.target.id === "dino-btn") {
+          animalChosen = "dino"
+        }
+
+        if (particularPet.type === animalChosen) {
           buttonUpdateString += `<div class="card text-center">
           <div class="card-header">
             ${particularPet.name}
@@ -315,7 +330,7 @@ const pets = [
     divToFill.innerHTML = buttonUpdateString;
   }
 
-  // document.querySelector(".cat-btn").addEventListener("onClick", showAnimal("cat"));
-  // document.querySelector(".dog-btn").addEventListener("onClick", showAnimal("dog"));
-  // document.querySelector(".dino-btn").addEventListener("onClick", showAnimal("dino"));
-  // document.querySelector(".all-btn").addEventListener("onClick", showAnimal("all"));
+  document.querySelector("#cat-btn").addEventListener("click", showAnimal);
+  document.querySelector("#dog-btn").addEventListener("click", showAnimal);
+  document.querySelector("#dino-btn").addEventListener("click", showAnimal);
+  document.querySelector("#all-btn").addEventListener("click", showAnimal);
