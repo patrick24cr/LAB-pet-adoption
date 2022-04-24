@@ -14,21 +14,24 @@ body {
   justify-content: center;
 }
 
-
-#cat-btn {
+#cat {
   background-color: rgb(44, 44, 150);
 }
 
-#dog-btn {
+#dog {
   background-color: rgb(36, 126, 36);
 }
 
-#dino-btn {
+#dino {
   background-color: rgb(214, 173, 24);
 }
 
-#all-btn {
+#all {
   background-color: rgb(72, 72, 72);
+}
+
+#new {
+  background-color: rgb(148, 148, 148);
 }
 
 .btn-primary {
@@ -36,7 +39,6 @@ body {
   color: rgb(255, 255, 255);
   border-color: rgb(212, 212, 212);
 }
-
 
 .card {
   margin: 1.5em;

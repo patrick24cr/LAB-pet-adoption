@@ -241,44 +241,16 @@ const pets = [
     }
   ];
 
+
+  let lastFilter = "all"
   const divToFill = document.querySelector("#mainDiv")
-
-  const petCardString = ""
-
   let domString = ""
 
-  for (const particularPet of pets) {
-    domString += `<div class="card text-center">
-    <div class="card-header">
-      ${particularPet.name}
-    </div>
-    <div class="imageDiv">
-      <img  src="${particularPet.imageUrl}" class="card-img-top" alt="image of pet">
-    </div>
-    <div class="card-body">
-      <h6 class="card-title">${particularPet.color}</h6>
-      <p class="card-text">${particularPet.specialSkill}</p>
-    </div>
-    <div class="card-footer footer-for-${particularPet.type}"">
-      ${particularPet.type}
-    </div>
-  </div>`
-
-  }
-
-  divToFill.innerHTML = domString;
-
-  //button function below here
-
-  let buttonUpdateString = ""
-
-  function showAnimal(event) {
-    console.log("event.target.id");
-    buttonUpdateString = ""
-    if (event.target.id === "all-btn") {
-
+  function updateStringForDom() {
+    domString = ""
+    if (lastFilter === "all") {
       for (const particularPet of pets) {
-        buttonUpdateString += `<div class="card text-center">
+        domString += `<div class="card text-center">
         <div class="card-header">
           ${particularPet.name}
         </div>
@@ -294,22 +266,10 @@ const pets = [
         </div>
       </div>`
       }
-
     } else {
       for (const particularPet of pets) {
-        let animalChosen = ""
-        if (event.target.id === "dog-btn") {
-          animalChosen = "dog"
-        }
-        if (event.target.id === "cat-btn") {
-          animalChosen = "cat"
-        }
-        if (event.target.id === "dino-btn") {
-          animalChosen = "dino"
-        }
-
-        if (particularPet.type === animalChosen) {
-          buttonUpdateString += `<div class="card text-center">
+        if (particularPet.type === lastFilter) {
+          domString += `<div class="card text-center">
           <div class="card-header">
             ${particularPet.name}
           </div>
@@ -327,10 +287,55 @@ const pets = [
         }
       }
     }
-    divToFill.innerHTML = buttonUpdateString;
   }
 
-  document.querySelector("#cat-btn").addEventListener("click", showAnimal);
-  document.querySelector("#dog-btn").addEventListener("click", showAnimal);
-  document.querySelector("#dino-btn").addEventListener("click", showAnimal);
-  document.querySelector("#all-btn").addEventListener("click", showAnimal);
+  function updateDom() {
+    updateStringForDom()
+    divToFill.innerHTML = domString;
+  }
+
+  const eventListeners = () => {
+    document.querySelector("#cat").addEventListener("click", (e) => {
+      lastFilter = e.target.id;
+      updateDom();
+    });
+    document.querySelector("#dog").addEventListener("click", (e) => {
+      lastFilter = e.target.id;
+      updateDom();
+    });
+    document.querySelector("#dino").addEventListener("click", (e) => {
+      lastFilter = e.target.id;
+      updateDom();
+    });
+    document.querySelector("#all").addEventListener("click", (e) => {
+      lastFilter = e.target.id;
+      updateDom();
+    });
+
+    document.querySelector('form').addEventListener('submit', (e) => {
+      
+      const formModal = new bootstrap.Modal(document.querySelector('#add-animal'));
+      const form = document.querySelector('form');
+
+      e.preventDefault(); // this goes in EVERY form submit to prevent page reload
+  
+      const newAnimalObject = {
+        name: document.querySelector("#name").value,
+        color: document.querySelector("#color").value,
+        specialSkill: document.querySelector("#special-skill").value,
+        type: document.querySelector("#animal").value,
+        imageUrl: document.querySelector("#image-url").value,
+        id: `${document.querySelector("#name").value}-${document.querySelector("#color").value}-${document.querySelector("#animal").value}`
+      }
+
+      console.log(newAnimalObject)
+      pets.push(newAnimalObject);
+      updateDom()
+      formModal.hide()
+      form.reset();
+    })
+  }
+
+
+updateDom();
+eventListeners();
