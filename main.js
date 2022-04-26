@@ -242,23 +242,74 @@ const pets = [
   ];
 
 
-  let lastFilter = "all"
-  const divToFill = document.querySelector("#mainDiv")
+  let lastFilterPressed = "all"
   let domStringToInsert = ""
 
-  function updateStringForDom() {
+  function insertModalHTML() {
+    document.querySelector("#modalDiv").innerHTML = `<div class="modal fade" id="add-animal" tabindex="-1" aria-labelledby="add-animal" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen-md-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Animal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modal-body">  
+
+          <form>
+            <div class="form-floating mb-3">
+              <input class="form-control form-control-lg" type="text" placeholder="name" id="name" aria-label="name" required>
+              <label for="videoId">Name</label>
+            </div>
+            
+            <div class="form-floating mb-3">
+              <input class="form-control form-control-lg" type="text" placeholder="color" id="color" aria-label="color" required>
+              <label for="title">Color</label>
+            </div>
+            
+            <div class="form-floating mb-3">
+              <select class="form-select form-control-lg" id="animal" aria-label="animal" required>
+                <option value="">What animal?</option>
+                <option value="cat">Cat</option>
+                <option value="dog">Dog</option>
+                <option value="dino">Dino</option>
+              </select>
+              <label for="category">Category</label>
+            </div>
+
+            <div class="form-floating mb-3">
+              <input class="form-control form-control-lg" type="text" placeholder="special-skill" id="special-skill" aria-label="special-skill" required>
+              <label for="title">Special Skill</label>
+            </div>
+            
+            <div class="form-floating mb-3">
+              <input class="form-control form-control-lg" type="text" placeholder="image-url" id="image-url" aria-label="title" required>
+              <label for="title">URL of Image</label>
+            </div>
+            
+            <button type="submit" class="btn btn-success"><!--data-bs-dismiss="modal"-->
+              Submit
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>`
+  }
+
+  function updateDom() {
     domStringToInsert = ""
-    if (lastFilter === "all") {
+
+    if (lastFilterPressed === "all") {
       for (const particularPet of pets) {
         domStringToInsert += `<div class="card text-center">
         <div class="card-header">
-          <ul>
-            <li><button class="btn btn-danger" id="fakedelete--${particularPet.id}">X</button></li>
-            <li>${particularPet.name}</li>
-            <li><button class="btn btn-danger" id="delete--${particularPet.id}">X</button></li>
-          </ul>
-          </div>
-          <div class="imageDiv">
+        <ul>
+          <li><button class="btn btn-danger" id="fakedelete--${particularPet.id}">X</button></li>
+          <li>${particularPet.name}</li>
+          <li><button class="btn btn-danger" id="delete--${particularPet.id}">X</button></li>
+        </ul>
+        </div>
+        <div class="imageDiv">
           <img  src="${particularPet.imageUrl}" class="card-img-top" alt="image of pet">
         </div>
         <div class="card-body">
@@ -270,9 +321,10 @@ const pets = [
         </div>
       </div>`
       }
-    } else { //if lastFilter is anything other than 'all'
+
+    } else { //if lastFilterPressed is anything other than 'all'
       for (const particularPet of pets) {
-        if (particularPet.type === lastFilter) {
+        if (particularPet.type === lastFilterPressed) {
           domStringToInsert += `<div class="card text-center">
           <div class="card-header">
           <ul>
@@ -295,47 +347,41 @@ const pets = [
         }
       }
     }
-  }
 
-  function updateDom() {
-    updateStringForDom()
-    divToFill.innerHTML = domStringToInsert;
+    document.querySelector("#mainDiv").innerHTML = domStringToInsert;
   }
 
   const eventListeners = () => {
     
+    const formModal = new bootstrap.Modal(document.querySelector('#add-animal'));
+
     document.querySelector("body").addEventListener("click", (e) => {
       if (e.target.id.includes("delete--") === true) {
         const [deleteKeyword, animalIdToDelete] = e.target.id.split("--");
         const index = pets.findIndex(taco => taco.id === animalIdToDelete);
         const updatedPets = pets.splice(index, 1);
-        console.log(animalIdToDelete);
-        console.log(index);
         updateDom();
       }
     })
 
     document.querySelector("#cat").addEventListener("click", (e) => {
-      lastFilter = e.target.id;
+      lastFilterPressed = e.target.id;
       updateDom();
     });
     document.querySelector("#dog").addEventListener("click", (e) => {
-      lastFilter = e.target.id;
+      lastFilterPressed = e.target.id;
       updateDom();
     });
     document.querySelector("#dino").addEventListener("click", (e) => {
-      lastFilter = e.target.id;
+      lastFilterPressed = e.target.id;
       updateDom();
     });
     document.querySelector("#all").addEventListener("click", (e) => {
-      lastFilter = e.target.id;
+      lastFilterPressed = e.target.id;
       updateDom();
     });
 
     document.querySelector('form').addEventListener('submit', (e) => {
-
-      const formModal = new bootstrap.Modal(document.querySelector('#add-animal'));
-      const form = document.querySelector('form');
 
       e.preventDefault(); // this goes in EVERY form submit to prevent page reload
   
@@ -348,15 +394,18 @@ const pets = [
         id: `${document.querySelector("#name").value}-${document.querySelector("#color").value}-${document.querySelector("#animal").value}`
       }
 
-      console.log(formModal);
       pets.push(newAnimalObject);
       updateDom();
       formModal.hide();
-      form.reset();
+      document.querySelector('form').reset();
     })
   }
 
 
-updateDom();
-eventListeners();
-console.log(bootstrap)
+const startApp = () => {
+  insertModalHTML();
+  updateDom();
+  eventListeners();
+}
+
+startApp()
