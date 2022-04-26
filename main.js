@@ -303,6 +303,7 @@ const pets = [
   }
 
   const eventListeners = () => {
+    
     document.querySelector("body").addEventListener("click", (e) => {
       if (e.target.id.includes("delete--") === true) {
         const [deleteKeyword, animalIdToDelete] = e.target.id.split("--");
@@ -347,7 +348,7 @@ const pets = [
         id: `${document.querySelector("#name").value}-${document.querySelector("#color").value}-${document.querySelector("#animal").value}`
       }
 
-      console.log(newAnimalObject);
+      console.log(formModal);
       pets.push(newAnimalObject);
       updateDom();
       formModal.hide();
